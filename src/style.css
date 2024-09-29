@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  width: 70%;
+  margin: auto;
+}
+
+.navigation {
+  ul {
+    display: flex;
+    align-items: center;
+    > * {
+      margin: 5px 10px;
+    }
+  }
+}
+
+.hero {
+  /* background-attachment: fixed; */
+  background-repeat: no-repeat;
+  background-position: top;
+  object-fit: contain;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 0.5;
+}
+
+.bdr {
+  border: 1px solid #000;
+}
+
+.btn-primary {
+  width: 215px;
+  height: 62px;
+  padding: 16px 32px 16px 32px;
+  gap: 10px;
+  border-radius: 2px 0px 0px 0px;
+  opacity: 0px;
+  background-color: #10ac84;
+  color: #fff;
+}
+
+.banner::before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.2;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 0.5;
+}
+
+/* 
+*** CSS for slider
+*/
+.property-slider {
+  overflow: hidden;
+  position: relative;
+}
+
+.property-slide {
+  min-width: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.single-proprty-detail {
+  p {
+    margin: 15px 0;
+  }
+}
