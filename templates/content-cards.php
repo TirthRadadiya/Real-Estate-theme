@@ -36,6 +36,7 @@
 
 <div class="w-fit mx-auto my-5">
     <?php
+    if(!$searched_posts->have_posts()) return;
     if ($total_pages > 1 && !is_home()) {
 
         $current_page = max(1, get_query_var('paged'));

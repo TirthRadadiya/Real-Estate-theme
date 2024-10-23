@@ -17,6 +17,10 @@ add_action('wp_ajax_nopriv_file_upload2', 'file_upload_callback2');
 function file_upload_callback2()
 {
 
+    if(empty($_FILES['thumbnail'])) {
+        wp_send_json_error(['message' => 'Thumbnail Is required']);
+    }
+
     // Perform actions or queries based on the data
     // Sanitize and validate the input fields
     $name = sanitize_text_field($_POST['name']);
@@ -51,10 +55,12 @@ function file_upload_callback2()
         update_post_meta($post_id, 'area', $area);
     }
 
+    
+
     // check_ajax_referer('file_upload', 'security');
     $arr_img_ext = array('image/png', 'image/jpeg', 'image/jpg', 'image/gif');
 
-    if (in_array($_FILES['thumbnail']['type'], haystack: $arr_img_ext)) {
+    if (in_array($_FILES['thumbnail']['type'],  $arr_img_ext)) {
         $upload = wp_upload_bits($_FILES["thumbnail"]["name"], null, file_get_contents($_FILES["thumbnail"]["tmp_name"]));
         // echo $upload['url'];
 

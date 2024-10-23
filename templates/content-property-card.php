@@ -4,7 +4,8 @@
     include get_template_directory() . "/inc/like-post.php"; ?>
     <a href="<?php the_permalink(); ?>" class="relative">
         <div class="relative">
-            <img src="<?php echo wp_get_attachment_url(get_post_thumbnail_id($post->ID), 'thumbnail'); ?>" alt="">
+            <img src="<?php echo wp_get_attachment_url(get_post_thumbnail_id($post->ID), 'thumbnail'); ?>"
+                class="h-[225px] w-full" alt="">
             <div class="w-[114px] h-[48px] bdr absolute bottom-[20px] left-[20px]"></div>
         </div>
 

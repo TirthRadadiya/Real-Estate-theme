@@ -22,7 +22,8 @@
                         <a href="<?php echo esc_url(site_url("/login")) ?>">Login/Signup</a>
                     </div>
                 <?php } else {
-                    $user = wp_get_current_user(); ?>
+                    $user = wp_get_current_user();
+                    ?>
 
                     <div class="flex">
                         <a href="<?php echo esc_url(site_url("/liked-posts")) ?>" class="flex mx-5 items-center">
@@ -30,6 +31,15 @@
                             <span class="ms-[10px]">Liked Posts</span>
                         </a>
                         <a href='<?php echo esc_url(site_url('/profile')) ?>'>Hey!!! <?php echo $user->user_login ?></a>
+                        <?php
+                        if (in_array('agent', $user->roles)) { ?>
+                            <div class="mt-3">
+                                <a class="btn btn-primary" href="<?php echo esc_url(site_url("/register-property")) ?>">
+                                    Register Property
+                                </a>
+                            </div>
+                        <?php }
+                        ?>
                     </div>
                 <?php }
                 ?>

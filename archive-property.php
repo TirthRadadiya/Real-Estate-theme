@@ -17,30 +17,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Build the query
         $meta_query = array('relation' => 'OR');
 
-        if (!empty($property_type)) {
-            $meta_query[] = array(
-                'key' => 'type',
-                'value' => $property_type,
-                'compare' => 'LIKE',
+        if (!empty($property_type))
+            $taxonomy = array(
+                array(
+                    'taxonomy' => 'apartment-types',
+                    'field' => 'slug',
+                    'terms' => $property_type,
+                )
             );
-        }
+        else
+            $filters = array(
+                'post_type' => 'property',
+                'meta_query' => $meta_query,
+            );
 
         if (!empty($property_size)) {
-            $meta_query[] = array(
-                'key' => 'area',
-                'value' => $property_size,
-                'terms' => 'LIKE',
-            );
+            // Add conditions based on size option
+            if ($property_size === 'small') {
+                $meta_query[] = array(
+                    'key' => 'area',      // Custom field 'area'
+                    'value' => 1000,        // Less than 1000 sq. ft.
+                    'type' => 'NUMERIC',
+                    'compare' => '<',
+                );
+            } elseif ($property_size === 'medium') {
+                $meta_query[] = array(
+                    'key' => 'area',
+                    'value' => array(1000, 2500),  // Between 1000 and 2500 sq. ft.
+                    'type' => 'NUMERIC',
+                    'compare' => 'BETWEEN',
+                );
+            } elseif ($property_size === 'large') {
+                $meta_query[] = array(
+                    'key' => 'area',
+                    'value' => 2500,        // Greater than 2500 sq. ft.
+                    'type' => 'NUMERIC',
+                    'compare' => '>',
+                );
+            }
         }
 
         if (!empty($property_location)) {
-            $location = array(
+            $add_taxonomy = array(
                 array(
                     'taxonomy' => 'cities',
                     'field' => 'slug',
                     'terms' => $property_location,
                 )
             );
+            if (!empty($taxonomy)) {
+                $taxonomy[] = array('relation' => "AND");
+                $taxonomy[] = $add_taxonomy;
+            } else {
+                $taxonomy = $add_taxonomy;
+            }
         }
 
         if (!empty($property_price)) {
@@ -68,19 +98,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // WP_Query for the 'property' custom post type
-        if (!empty($location))
+        if (!empty($taxonomy))
             $filters = array(
                 'post_type' => 'property',
                 'meta_query' => $meta_query,
-                'tax_query' => $location
+                'tax_query' => $taxonomy
             );
         else
             $filters = array(
                 'post_type' => 'property',
                 'meta_query' => $meta_query,
             );
-
-
     }
 }
 

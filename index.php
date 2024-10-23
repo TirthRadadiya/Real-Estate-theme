@@ -15,9 +15,18 @@
                     <select id="property_type" name="property_type"
                         class="mt-1 block w-fit px-3 py-2 border border-border rounded-md shadow-sm focus:ring focus:ring-primary focus:border-primary bg-input text-foreground">
                         <option value="">Property Type</option>
-                        <option>House</option>
-                        <option>Apartment</option>
-                        <option>Condo</option>
+                        <?php
+                        $terms = get_terms(array(
+                            'taxonomy' => 'apartment-types',
+                            'hide_empty' => false,  // Set to true to hide terms with no posts
+                        ));
+
+                        if (!empty($terms) && !is_wp_error($terms)) {
+                            foreach ($terms as $term) { ?>
+                                <option value="<?php echo $term->slug ?>" <?php selected($term->slug, $_POST['property_type'] ?? ''); ?>><?php echo $term->name; ?></option>
+                            <?php }
+                        }
+                        ?>
                     </select>
                 </div>
                 <div class="flex-1">
@@ -26,9 +35,9 @@
                     <select id="property_size" name="property_size"
                         class="mt-1 block w-fit px-3 py-2 border border-border rounded-md shadow-sm focus:ring focus:ring-primary focus:border-primary bg-input text-foreground">
                         <option value="">Property size</option>
-                        <option>Small</option>
-                        <option>Medium</option>
-                        <option>Large</option>
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
                     </select>
                 </div>
                 <div class="flex-1">

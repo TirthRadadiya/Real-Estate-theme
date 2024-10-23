@@ -27,6 +27,7 @@ function register_custom_post()
 {
     add_theme_support('post-thumbnails');
 
+
     // Property Post type
     register_post_type('property', array(
         'public' => true,
@@ -37,23 +38,12 @@ function register_custom_post()
         'labels' => array(
             'name' => "Property",
         ),
-        'capabilities' => array(
-            'edit_post' => 'edit_property',             // Allows editing their own property
-            'read_post' => 'read_property',             // Allows reading their own property
-            'delete_post' => 'delete_property',           // Allows deleting their own property
-            'edit_posts' => 'edit_properties',           // Allows editing multiple of their own properties
-            'publish_posts' => 'publish_properties',        // Allows publishing their own properties
-            'read_private_posts' => 'read_private_properties',   // Allows reading private properties (if needed)
-            'delete_posts' => 'delete_properties',         // Allows deleting their own properties
-            'edit_private_posts' => 'edit_private_properties',   // Allows editing private properties (if needed)
-            'delete_private_posts' => 'delete_private_properties' // Allows deleting private properties (if needed)
-        ),
         // as pointed out by iEmanuele, adding map_meta_cap will map the meta correctly 
         'map_meta_cap' => true,
+        'capability_type' => 'post',
         "rewrite" => array('slug' => "properties"),
         'supports' => array('title', 'editor', 'thumbnail', 'custom-fields')
     ));
-
 
     // Agets Post type
     register_post_type('agent', array(
@@ -68,13 +58,9 @@ function register_custom_post()
         "rewrite" => array('slug' => "agents"),
         'supports' => array('title', 'editor', 'thumbnail', 'custom-fields')
     ));
-
-
 }
 
 add_action('init', 'register_custom_post');
-
-require get_template_directory() . "/inc/custom-taxonomy.php";
 
 function image_uploader_enqueue()
 {
@@ -139,9 +125,7 @@ add_action('admin_init', 'add_property_capabilities_to_agent');
 require get_template_directory() . "/inc/helper.php";
 require get_template_directory() . "/inc/register-property.php";
 require get_template_directory() . "/inc/rest-api-handler.php";
-
-
-
+require get_template_directory() . "/inc/custom-taxonomy.php";
 
 
 /* 
@@ -153,9 +137,6 @@ require get_template_directory() . "/inc/rest-api-handler.php";
 // function disable_block_editor_for_page_post_type( $use_block_editor, $post_type ) {
 //         return ( 'property' === $post_type ) ? false : $use_block_editor;
 // }
-
-
-
 
 /* 
  *** Override core gallery block render function
