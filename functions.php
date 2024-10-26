@@ -118,6 +118,15 @@ function add_property_capabilities_to_agent()
     $role->add_cap('delete_properties');
     $role->add_cap('delete_private_properties');
     $role->add_cap('edit_private_properties');
+
+    // Get the administrator role
+    $admin_role = get_role('administrator');
+    
+    // Check if the role already has the 'agent' capabilities
+    if (!$admin_role->has_cap('agent')) {
+        // Add the 'agent' role capabilities to the administrator
+        $admin_role->add_cap('agent');
+    }
 }
 add_action('admin_init', 'add_property_capabilities_to_agent');
 

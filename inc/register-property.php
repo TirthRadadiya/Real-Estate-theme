@@ -56,7 +56,6 @@ function file_upload_callback2()
     }
 
     
-
     // check_ajax_referer('file_upload', 'security');
     $arr_img_ext = array('image/png', 'image/jpeg', 'image/jpg', 'image/gif');
 
@@ -115,6 +114,8 @@ function file_upload_callback2()
     }
 
     update_post_meta($post_id, '_added_by', get_current_user_id());
+
+    wp_send_json( [ 'success' => true, 'message' => 'Property Registeration completed' ] );
 
     wp_die();
 }

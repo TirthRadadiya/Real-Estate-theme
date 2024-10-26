@@ -14,6 +14,6 @@
     </div>
     <div class="icon-box flex items-center w-1/4">
         <span class="me-3"><img src="<?php echo get_theme_file_uri("/assets/images/area.png") ?>" alt=""></span>
-        <p><?php echo $post->area ?></p>
+        <p><?php echo $post->area ?> sq</p>
     </div>
 </div>
