@@ -31,7 +31,7 @@
                         <a href="<?php echo esc_url( site_url( '/profile' ) ); ?>">
                             <?php printf( esc_html__( 'Hey!!! %s', 'your-textdomain' ), esc_html( $user->user_login ) ); ?>
                         </a>
-                        <?php if ( in_array( 'agent', $user->roles, true ) ) : ?>
+                        <?php if ( array_intersect(['agent', 'administrator'], $user->roles) !== [] ) : ?>
                             <a href="<?php echo esc_url( site_url( '/register-property' ) ); ?>" style="margin: 0 10px">
                                 <?php esc_html_e( 'Register Property', 'your-textdomain' ); ?>
                             </a>

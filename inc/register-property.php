@@ -16,6 +16,14 @@ add_action('wp_ajax_nopriv_file_upload2', 'file_upload_callback2');
 
 function file_upload_callback2()
 {
+    if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        if ( ! (array_intersect(['agent', 'administrator'], $current_user->roles) !== []) ) {
+            wp_send_json_error(['message' => 'You do not have permission to add property']);
+        }
+    } else {
+        wp_send_json_error(['message' => 'Please login to be able to register property']);
+    }
 
     if(empty($_FILES['thumbnail'])) {
         wp_send_json_error(['message' => 'Thumbnail Is required']);
@@ -54,63 +62,17 @@ function file_upload_callback2()
         update_post_meta($post_id, 'bath', $bath);
         update_post_meta($post_id, 'area', $area);
     }
+   
+    // uploading thumbnail image
+    $attachment_id = handle_file_upload($_FILES['thumbnail'], $post_id);
+    set_post_thumbnail($post_id, $attachment_id);
 
-    
-    // check_ajax_referer('file_upload', 'security');
-    $arr_img_ext = array('image/png', 'image/jpeg', 'image/jpg', 'image/gif');
 
-    if (in_array($_FILES['thumbnail']['type'],  $arr_img_ext)) {
-        $upload = wp_upload_bits($_FILES["thumbnail"]["name"], null, file_get_contents($_FILES["thumbnail"]["tmp_name"]));
-        // echo $upload['url'];
-
-        if (!$upload['error']) {
-            $filename = $upload['file'];
-            $wp_filetype = wp_check_filetype($filename, null);
-            $attachment = array(
-                'post_mime_type' => $wp_filetype['type'],
-                'post_title' => sanitize_file_name($filename),
-                'post_content' => '',
-                'post_status' => 'inherit',
-                'guid' => $upload['url']
-            );
-            $attachment_id = wp_insert_attachment($attachment, $filename, $post_id);
-            if (!is_wp_error($attachment_id)) {
-                require_once(ABSPATH . 'wp-admin/includes/image.php');
-                $attachment_data = wp_generate_attachment_metadata($attachment_id, $filename);
-                wp_update_attachment_metadata($attachment_id, $attachment_data);
-                set_post_thumbnail($post_id, $attachment_id);
-            }
-        }
-    }
-
+    // uploading other images
     if (!empty($_FILES['files']['name'][0])) {
-        $uploaded_files = array();
-
         foreach ($_FILES['files']['name'] as $key => $name) {
-            if (in_array($_FILES['files']['type'][$key], $arr_img_ext)) {
-                $upload = wp_upload_bits($name, null, file_get_contents($_FILES['files']['tmp_name'][$key]));
-
-                if (!$upload['error']) {
-                    $filename = $upload['file'];
-                    $wp_filetype = wp_check_filetype($filename, null);
-                    $attachment = array(
-                        'post_mime_type' => $wp_filetype['type'],
-                        'post_title' => sanitize_file_name($filename),
-                        'post_content' => '',
-                        'post_status' => 'inherit',
-                        'guid' => $upload['url']
-                    );
-                    $attachment_id = wp_insert_attachment($attachment, $filename, $post_id);
-                }
-
-                if (isset($upload['url'])) {
-                    $uploaded_files[] = $upload['url']; // Store each uploaded file URL
-                }
-            }
+            handle_file_upload($_FILES['files'], $post_id, $key);
         }
-
-        // Return the URLs of the uploaded files
-        // echo json_encode($uploaded_files);
     }
 
     update_post_meta($post_id, '_added_by', get_current_user_id());

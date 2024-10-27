@@ -8,7 +8,7 @@
 
 if (is_user_logged_in()) {
     $current_user = wp_get_current_user();
-    if (!in_array('agent', $current_user->roles, true)) {
+    if ( ! (array_intersect(['agent', 'administrator'], $current_user->roles) !== []) ) {
         wp_redirect(esc_url(site_url('/become-agent')));
         exit;
     }
@@ -20,7 +20,7 @@ if (is_user_logged_in()) {
 
 <?php get_header(); ?>
 
-<form id="property-form" class="w-[60vw] my-20 mx-auto p-6 bg-white shadow-md rounded-md" enctype="multipart/form-data" data-url="<?php echo esc_url(admin_url('admin-ajax.php')); ?>">
+<form id="property-form" method="POST" class="w-[60vw] my-20 mx-auto p-6 bg-white shadow-md rounded-md" enctype="multipart/form-data" data-url="<?php echo esc_url(admin_url('admin-ajax.php')); ?>">
     <h2 class="text-2xl font-semibold mb-6"><?php esc_html_e('Property Registration', 'your-text-domain'); ?></h2>
 
     <div class="grid grid-cols-2">

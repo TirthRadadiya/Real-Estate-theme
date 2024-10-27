@@ -48,14 +48,30 @@ function find_blocks_of_post($blocks, $type)
  * @param int   $post_id The ID of the post to attach the file to.
  * @return int|bool Attachment ID on success, false on failure.
  */
-function handle_file_upload($file, $post_id = 0) {
+function handle_file_upload($file, $post_id = 0, $key = '') {
     $allowed_file_types = array('image/png', 'image/jpeg', 'image/jpg', 'image/gif');
 
-    if (!in_array($file['type'], $allowed_file_types)) {
+    $type = null;
+    $image = null;
+    $tmp_name = null;
+
+    if ( $key != '' ) {
+        $type = $file['type'][$key];
+        $image = $file['name'][$key];
+        $tmp_name = $file['tmp_name'][$key];
+    } else {
+        $type = $file['type'];
+        $image = $file['name'];
+        $tmp_name = $file['tmp_name'];
+    }
+
+    if (!in_array($type, $allowed_file_types)) {
         return new WP_Error('invalid_file_type', 'File type not allowed.');
     }
 
-    $upload = wp_upload_bits($file["name"], null, file_get_contents($file["tmp_name"]));
+    $upload = null;
+
+    $upload = wp_upload_bits($image, null, file_get_contents($tmp_name));
 
     if ($upload['error']) {
         return new WP_Error('upload_error', $upload['error']);
@@ -73,13 +89,11 @@ function handle_file_upload($file, $post_id = 0) {
 
     $attachment_id = wp_insert_attachment($attachment, $filename, $post_id);
 
-    if (is_wp_error($attachment_id)) {
-        return $attachment_id;
+    if (!is_wp_error($attachment_id)) {
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        $attachment_data = wp_generate_attachment_metadata($attachment_id, $filename);
+        wp_update_attachment_metadata($attachment_id, $attachment_data);
     }
-
-    require_once(ABSPATH . 'wp-admin/includes/image.php');
-    $attachment_data = wp_generate_attachment_metadata($attachment_id, $filename);
-    wp_update_attachment_metadata($attachment_id, $attachment_data);
 
     return $attachment_id;
 }
