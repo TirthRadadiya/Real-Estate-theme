@@ -82,17 +82,38 @@
 *** CSS for slider
 */
 .property-slider {
-  overflow: hidden;
-  position: relative;
+	display: flex;
+  height: 320px;
+	min-height: fit-content;
+	margin: 0 auto;
+	overflow: hidden;
+	position: relative;
+	/* width: 80vw; */
 }
 
 .property-slide {
-  min-width: 100%;
-  transition: transform 0.5s ease-in-out;
+	left: 0;
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	transition: all 0.3s linear;
+	width: 100%;
 }
 
-.single-proprty-detail {
-  p {
-    margin: 15px 0;
-  }
+.property-slide.activeSlide {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.property-slide.activeSlide .slider-content {
+	margin: auto;
+	width: 80%;
+}
+
+.property-slide.lastSlide {
+	transform: translateX(-100%);
+}
+
+.property-slide.nextSlide {
+	transform: translateX(100%);
 }

@@ -22,7 +22,7 @@ function create_custom_taxonomy() {
 
     // Settings for the taxonomy
     $args = array(
-        'hierarchical'      => false,  // If true, it behaves like categories; false makes it behave like tags
+        'hierarchical'      => true,  // If true, it behaves like categories; false makes it behave like tags
         'labels'            => $labels,
         'show_ui'           => true,
         'has_archive'       => true,
@@ -52,7 +52,7 @@ function create_custom_taxonomy() {
 
     // Settings for the taxonomy
     $args = array(
-        'hierarchical'      => false,  // If true, it behaves like categories; false makes it behave like tags
+        'hierarchical'      => true,  // If true, it behaves like categories; false makes it behave like tags
         'labels'            => $labels,
         'show_ui'           => true,
         'has_archive'       => true,

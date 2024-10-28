@@ -158,7 +158,7 @@
         </a>
     </div>
 
-    <div class="bg-card flex property-slider">
+    <div class="bg-card flex property-slider" id="property-slider">
         <?php
         $slider_property = new WP_Query( array(
             'offset'         => 1,
@@ -253,7 +253,7 @@
             ?>
         </div>
         <div class="text-center mt-10">
-            <a href="<?php echo esc_url( get_theme_file_uri( '/taxonomy-city.php' ) ); ?>">
+            <a href="<?php echo esc_url( home_url("/cities") ); ?>">
                 <button class="btn btn-primary">See All Cities</button>
             </a>
         </div>

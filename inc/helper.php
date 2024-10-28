@@ -42,7 +42,7 @@ function find_blocks_of_post($blocks, $type)
 
 
 /**
- * Handle single file upload and attachment creation.
+ * Handle file upload and attachment creation.
  *
  * @param array $file The file array from $_FILES.
  * @param int   $post_id The ID of the post to attach the file to.
@@ -97,3 +97,30 @@ function handle_file_upload($file, $post_id = 0, $key = '') {
 
     return $attachment_id;
 }
+
+
+/**
+ * Handle page banner.
+ *
+ * @param string $title title for breadcrumbs banner.
+ * @param array $breadcrumbs array which have data about breadcrumbs.
+ * @return void just displaying breadcrumbs banner.
+ */
+function display_breadcrumbs_banner( $title, $breadcrumbs ) { ?>
+    <div class="relative bg-cover bg-center h-64"
+    style="background-image: url('<?php echo get_template_directory_uri() ?>/assets/images/banner.png');">
+        <div class="absolute inset-0 bg-black opacity-80"></div>
+        <div class="relative flex flex-col items-center justify-center h-full text-white p-4">
+            <div class="text-center md:text-left md:mr-4 mb-4 md:mb-0 w-[540px]">
+                <p class="text-2xl font-bold text-center mb-3"><?php echo $title; ?></p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center items-center w-full max-w-md">
+                <?php
+                foreach ($breadcrumbs as $key => $value) { ?>
+                    <span><a href="<?php echo $value ?>"><?php echo $key ?></a></span>
+                <?php }
+                ?>
+            </div>
+        </div>
+    </div>
+<?php }
