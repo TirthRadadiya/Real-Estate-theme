@@ -1,40 +1,40 @@
 jQuery(document).ready(function ($) {
-  // Instantiates the variable that holds the media library frame.
-  var meta_image_frame;
+  // Instantiate the variable that holds the media library frame.
+  var metaImageFrame;
 
-  // Runs when the image button is clicked.
-  $("#upload_image_btn").click(function (e) {
-    // Prevents the default action from occuring.
-    e.preventDefault();
+  // Run when the image button is clicked.
+  $('#upload_image_btn').on('click', function (event) {
+    // Prevent the default action from occurring.
+    event.preventDefault();
 
     // If the frame already exists, re-open it.
-    if (meta_image_frame) {
-      meta_image_frame.open();
+    if (metaImageFrame) {
+      metaImageFrame.open();
       return;
     }
 
-    // Sets up the media library frame
-    meta_image_frame = wp.media.frames.meta_image_frame = wp.media({
+    // Set up the media library frame.
+    metaImageFrame = wp.media.frames.metaImageFrame = wp.media({
       title: meta_image.title,
       button: { text: meta_image.button },
-      library: { type: "image" },
+      library: { type: 'image' }
     });
 
-    // Runs when an image is selected.
-    meta_image_frame.on("select", function () {
-      // Grabs the attachment selection and creates a JSON representation of the model.
-      var media_attachment = meta_image_frame
+    // Run when an image is selected.
+    metaImageFrame.on('select', function () {
+      // Grab the attachment selection and create a JSON representation of the model.
+      var mediaAttachment = metaImageFrame
         .state()
-        .get("selection")
+        .get('selection')
         .first()
         .toJSON();
 
-      // Sends the attachment URL to our custom image input field.
-      console.log(media_attachment.url);
-      $("#txt_upload_image").val(media_attachment.url);
+      // Send the attachment URL to our custom image input field.
+      console.log(mediaAttachment.url);
+      $('#txt_upload_image').val(mediaAttachment.url);
     });
 
-    // Opens the media library frame.
-    meta_image_frame.open();
+    // Open the media library frame.
+    metaImageFrame.open();
   });
 });

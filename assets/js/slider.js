@@ -6,7 +6,6 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
 	// Initial Setup of Slides
 	function setupSlides() {
-		console.log("inside function slide");
 		slides.forEach( function ( slide, index ) {
 			slide.classList.remove( 'activeSlide', 'nextSlide', 'lastSlide' );
 			if ( index === currentIndex ) {
@@ -34,14 +33,14 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	setupSlides(); // Initialize slides on load
 
 	// Handle Next Button Click
-	document.querySelector( '#next' ).addEventListener( 'click', function () {
+	document.querySelector( '#next' )?.addEventListener( 'click', function () {
 		stopAutoScroll();
 		goToNextSlide();
 		startAutoScroll();
 	});
 
 	// Handle Previous Button Click
-	document.querySelector( '#prev' ).addEventListener( 'click', function () {
+	document.querySelector( '#prev' )?.addEventListener( 'click', function () {
 		stopAutoScroll();
 		goToPrevSlide();
 		startAutoScroll();
@@ -52,15 +51,15 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	let startX = 0;
 	let endX = 0;
 
-	slideContainer.addEventListener( 'touchstart', function ( event ) {
+	slideContainer?.addEventListener( 'touchstart', function ( event ) {
 		startX = event.touches[0].clientX; // Get initial touch position (X-axis)
 	});
 
-	slideContainer.addEventListener( 'touchmove', function ( event ) {
+	slideContainer?.addEventListener( 'touchmove', function ( event ) {
 		endX = event.touches[0].clientX; // Get position as finger moves (X-axis)
 	});
 
-	slideContainer.addEventListener( 'touchend', function () {
+	slideContainer?.addEventListener( 'touchend', function () {
 		const deltaX = endX - startX; // Calculate the swipe distance
 
 		if ( Math.abs( deltaX ) > 50 ) {

@@ -1,6 +1,5 @@
 <?php
 
-
 // registering custom taxonomy
 function create_custom_taxonomy() {
     
@@ -70,7 +69,7 @@ add_action( 'init', 'create_custom_taxonomy' );
 
 // Add form fields for the image in the add term page
 add_action( 'cities_add_form_fields', 'add_term_image', 10, 2 );
-function add_term_image( $taxonomy ) {
+function add_term_image() {
     ?>
     <div class="form-field term-group">
         <label for="txt_upload_image"><?php esc_html_e( 'Upload an Image', 'textdomain' ); ?></label>
@@ -91,7 +90,7 @@ function save_term_image( $term_id ) {
 
 // Add form fields for the image in the edit term page
 add_action( 'cities_edit_form_fields', 'edit_image_upload', 10, 2 );
-function edit_image_upload( $term, $taxonomy ) {
+function edit_image_upload( $term ) {
     // Get the current image URL
     $txt_upload_image = get_term_meta( $term->term_id, 'term_image', true );
     ?>
@@ -109,7 +108,7 @@ function edit_image_upload( $term, $taxonomy ) {
 
 // Update the image when a term is edited
 add_action( 'edited_cities', 'update_image_upload', 10, 2 );
-function update_image_upload( $term_id, $tt_id ) {
+function update_image_upload( $term_id ) {
     if ( isset( $_POST['txt_upload_image'] ) && '' !== $_POST['txt_upload_image'] ) {
         $image_url = sanitize_text_field( $_POST['txt_upload_image'] );
         update_term_meta( $term_id, 'term_image', $image_url );

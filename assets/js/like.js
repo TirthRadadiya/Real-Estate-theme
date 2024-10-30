@@ -1,51 +1,47 @@
 document.addEventListener(
-  "click",
-  function (e) {
-    addLike(e);
+  'click',
+  function (event) {
+    addLike(event);
   },
   false
 );
 
-const addLike = (e) => {
+const addLike = function (event) {
   const postId =
-    e.target.localName === "img"
-      ? e.target?.offsetParent?.dataset?.post
-      : e.target?.dataset?.post;
+    event.target.localName === 'img'
+      ? event.target.offsetParent?.dataset?.post
+      : event.target.dataset?.post;
 
   const clickedElement =
-    e.target.localName === "img"
-      ? e.target
-      : e.target.getElementsByTagName("img")[0];
+    event.target.localName === 'img'
+      ? event.target
+      : event.target.getElementsByTagName('img')[0];
 
-  fetch("/wp-json/realestate/v1/manageLikes", {
-    method: "POST",
+  if (!postId) {
+    return;
+  }
+
+  fetch('/wp-json/realestate/v1/manageLikes', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "X-WP-Nonce": themePath.nonce, // REST API nonce for security
+      'Content-Type': 'application/json',
+      'X-WP-Nonce': themePath.nonce, // REST API nonce for security
     },
     body: JSON.stringify({
-      postId,
+      postId: postId,
     }),
   })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-
-      if (data.message.includes("saved")) {
-        clickedElement.src = `${themePath.path}/assets/images/like.png`;
-      }
-
-      if (data.message.includes("removed")) {
-        clickedElement.src = `${themePath.path}/assets/images/heart.png`;
-      }
-
-      //   if (data.id) {
-      //     console.log("Like saved successfully.");
-      //   } else {
-      //     console.log("Error saving like:", data.message);
-      //   }
+    .then(function (response) {
+      return response.json();
     })
-    .catch((error) => {
-      console.error("Error:", error);
+    .then(function (data) {
+      if (data.message.includes('saved')) {
+        clickedElement.src = themePath.path + '/assets/images/like.png';
+      } else if (data.message.includes('removed')) {
+        clickedElement.src = themePath.path + '/assets/images/heart.png';
+      }
+    })
+    .catch(function (error) {
+      console.error('Error:', error);
     });
 };

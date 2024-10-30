@@ -1,141 +1,186 @@
 <?php
-
 /**
  * Enqueue scripts and styles.
  */
-function load_script_stytles()
-{
-    wp_enqueue_style('output', get_template_directory_uri() . '/dist/output.css', array());
-    wp_enqueue_style("font-awesome", "//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css");
-    wp_enqueue_script('sliderJS', get_template_directory_uri() . "/assets/js/slider.js", array('jquery'), '1.0.0', true);
-    wp_enqueue_script('propertyRegistrationJS', get_template_directory_uri() . "/assets/js/property-registration.js", array('jquery'), '1.0.0', true);
-    wp_enqueue_script('likeJS', get_template_directory_uri() . "/assets/js/like.js", array('jquery'), '1.0.0', true);
-    wp_localize_script('likeJS', 'themePath', array('path' => get_theme_file_uri(), 'nonce' => wp_create_nonce('wp_rest'), 'domain' => esc_url(site_url("/"))));
-}
-add_action('wp_enqueue_scripts', 'load_script_stytles');
-
-function load_functionalities()
-{
-    register_nav_menus(array(
-        'main-nav' => 'Main Header Navigtion'
-    ));
-}
-
-add_action('after_setup_theme', 'load_functionalities');
-
-function register_custom_post()
-{
-    add_theme_support('post-thumbnails');
-
-
-    // Property Post type
-    register_post_type('property', array(
-        'public' => true,
-        'show_ui' => true,
-        'has_archive' => true,
-        'show_in_rest' => true,
-        'menu_icon' => "dashicons-admin-home",
-        'labels' => array(
-            'name' => "Property",
-        ),
-        // as pointed out by iEmanuele, adding map_meta_cap will map the meta correctly 
-        'map_meta_cap' => true,
-        'capability_type' => 'post',
-        "rewrite" => array('slug' => "properties"),
-        'supports' => array('title', 'editor', 'thumbnail', 'custom-fields')
-    ));
-
-    // Agets Post type
-    register_post_type('agent', array(
-        'public' => true,
-        'show_ui' => true,
-        'has_archive' => true,
-        'show_in_rest' => true,
-        'menu_icon' => "dashicons-businessman",
-        'labels' => array(
-            'name' => "Agent",
-        ),
-        "rewrite" => array('slug' => "agents"),
-        'supports' => array('title', 'editor', 'thumbnail', 'custom-fields')
-    ));
-}
-
-add_action('init', 'register_custom_post');
-
-function image_uploader_enqueue()
-{
-
-    wp_enqueue_media();
-
-    wp_register_script('meta-image', get_template_directory_uri() . '/assets/js/media-uploader.js', array('jquery'));
+function theme_enqueue_scripts_styles() {
+    wp_enqueue_style(
+        'theme-output',
+        get_template_directory_uri() . '/dist/output.css',
+        array(),
+        null
+    );
+    wp_enqueue_style(
+        'font-awesome',
+        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css',
+        array(),
+        null
+    );
+    wp_enqueue_script(
+        'theme-slider-js',
+        get_template_directory_uri() . '/assets/js/slider.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
+    wp_enqueue_script(
+        'theme-property-registration-js',
+        get_template_directory_uri() . '/assets/js/property-registration.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
+    wp_enqueue_script(
+        'theme-like-js',
+        get_template_directory_uri() . '/assets/js/like.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
     wp_localize_script(
-        'meta-image',
-        'meta_image',
+        'theme-like-js',
+        'themePath',
         array(
-            'title' => 'Upload an Image',
-            'button' => 'Use this Image',
+            'path'   => get_theme_file_uri(),
+            'nonce'  => wp_create_nonce('wp_rest'),
+            'domain' => esc_url(site_url('/')),
         )
     );
-    wp_enqueue_script('meta-image');
-
 }
-add_action('admin_enqueue_scripts', 'image_uploader_enqueue');
-add_action('after_setup_theme', 'remove_admin_bar');
+add_action('wp_enqueue_scripts', 'theme_enqueue_scripts_styles');
 
-function remove_admin_bar()
-{
+/**
+ * Register theme functionalities.
+ */
+function theme_register_menus() {
+    register_nav_menus(
+        array(
+            'main-nav' => __('Main Header Navigation', 'textdomain'),
+        )
+    );
+}
+add_action('after_setup_theme', 'theme_register_menus');
+
+/**
+ * Register custom post types.
+ */
+function theme_register_custom_posts() {
+    add_theme_support('post-thumbnails');
+
+    // Register Property post type
+    register_post_type('property', array(
+        'public'            => true,
+        'show_ui'           => true,
+        'has_archive'       => true,
+        'show_in_rest'      => true,
+        'menu_icon'         => 'dashicons-admin-home',
+        'labels'            => array(
+            'name' => __('Property', 'textdomain'),
+        ),
+        'map_meta_cap'      => true,
+        'capability_type'   => 'post',
+        'rewrite'           => array('slug' => 'properties'),
+        'supports'          => array('title', 'editor', 'thumbnail', 'custom-fields'),
+    ));
+
+    // Register Agent post type
+    register_post_type('agent', array(
+        'public'            => true,
+        'show_ui'           => true,
+        'has_archive'       => true,
+        'show_in_rest'      => true,
+        'menu_icon'         => 'dashicons-businessman',
+        'labels'            => array(
+            'name' => __('Agent', 'textdomain'),
+        ),
+        'rewrite'           => array('slug' => 'agents'),
+        'supports'          => array('title', 'editor', 'thumbnail', 'custom-fields'),
+    ));
+}
+add_action('init', 'theme_register_custom_posts');
+
+/**
+ * Enqueue media uploader for image fields.
+ */
+function theme_image_uploader_enqueue() {
+    wp_enqueue_media();
+    wp_register_script(
+        'theme-meta-image',
+        get_template_directory_uri() . '/assets/js/media-uploader.js',
+        array('jquery')
+    );
+    wp_localize_script(
+        'theme-meta-image',
+        'meta_image',
+        array(
+            'title'  => __('Upload an Image', 'textdomain'),
+            'button' => __('Use this Image', 'textdomain'),
+        )
+    );
+    wp_enqueue_script('theme-meta-image');
+}
+add_action('admin_enqueue_scripts', 'theme_image_uploader_enqueue');
+
+/**
+ * Hide the admin bar for non-administrator users.
+ */
+function theme_remove_admin_bar() {
     if (!current_user_can('administrator') && !is_admin()) {
         show_admin_bar(false);
     }
 }
+add_action('after_setup_theme', 'theme_remove_admin_bar');
 
-function add_agent_role()
-{
+/**
+ * Add custom role for Agent.
+ */
+function theme_add_agent_role() {
     add_role(
         'agent',
-        'Agent',
+        __('Agent', 'textdomain'),
         array(
-            'read' => true,
-            'edit_posts' => false,
-            'delete_posts' => false,
+            'read'          => true,
+            'edit_posts'    => false,
+            'delete_posts'  => false,
         )
     );
 }
-add_action('init', 'add_agent_role');
+add_action('init', 'theme_add_agent_role');
 
-function add_property_capabilities_to_agent()
-{
-    // Get the agent role
+/**
+ * Add capabilities for the Agent role.
+ */
+function theme_add_property_capabilities_to_agent() {
     $role = get_role('agent');
 
-    // Add property capabilities to the agent role
-    $role->add_cap('edit_property');
-    $role->add_cap('read_property');
-    $role->add_cap('delete_property');
-    $role->add_cap('edit_properties');
-    $role->add_cap('publish_properties');
-    $role->add_cap('read_private_properties');
-    $role->add_cap('delete_properties');
-    $role->add_cap('delete_private_properties');
-    $role->add_cap('edit_private_properties');
+    if ($role) {
+        $capabilities = array(
+            'edit_property',
+            'read_property',
+            'delete_property',
+            'edit_properties',
+            'publish_properties',
+            'read_private_properties',
+            'delete_properties',
+            'delete_private_properties',
+            'edit_private_properties',
+        );
+        foreach ($capabilities as $cap) {
+            $role->add_cap($cap);
+        }
+    }
 
-    // Get the administrator role
     $admin_role = get_role('administrator');
-    
-    // Check if the role already has the 'agent' capabilities
-    if (!$admin_role->has_cap('agent')) {
-        // Add the 'agent' role capabilities to the administrator
+    if ($admin_role && !$admin_role->has_cap('agent')) {
         $admin_role->add_cap('agent');
     }
 }
-add_action('admin_init', 'add_property_capabilities_to_agent');
+add_action('admin_init', 'theme_add_property_capabilities_to_agent');
 
-
-require get_template_directory() . "/inc/helper.php";
-require get_template_directory() . "/inc/register-property.php";
-require get_template_directory() . "/inc/rest-api-handler.php";
-require get_template_directory() . "/inc/custom-taxonomy.php";
-
+// Include additional functionality files.
+require get_template_directory() . '/inc/helper.php';
+require get_template_directory() . '/inc/register-property.php';
+require get_template_directory() . '/inc/rest-api-handler.php';
+require get_template_directory() . '/inc/custom-taxonomy.php';
 
 /* 
  *** disable block editor for a specific post type
